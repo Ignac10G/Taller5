@@ -1,11 +1,28 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
-autonumber
+class Biblioteca{
+Libros
+Usuarios
+}
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+class Usuario{
+Rut
+Nombre
+Apellido
+Contraseña
+Libros en prestamo
+}
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+class Libro{
+ISBN
+Título
+Autor
+Categoría
+Numero de copias
+}
+
+Usuario "1..*"---> "1"Biblioteca: solicita
+Usuario "1..*"---> "1..*"Libro: obtiene
+Biblioteca"1" ---> "1..*"Libro: poese
 @enduml

@@ -1,4 +1,61 @@
 @startuml
 
+class Sistema{
+-Usuarios: Usuario[]
+-libros: Libro[]
+-usuario: Usuario
++iniciarSession(usuario:Usuario)
++buscarUsuarioRut(rut:String): Usuario
++cerrarSession(): void
++realizarPrestamoLibro(libro:Libro): void
++realizarDevolucionLibro(libro:Libro): void
++buscarLibro(isbn:String): Libro
++leerArchivoLibros(): void
++leerArchivoUsuarios(): void
++leerArchivoReservas(): void
++cargarInformacion(): void
++guardarInformacion(): void
++getusuario(): Usuario
++getLibros(): Libro[]
++agregarLibro(libro:Libro): void
+}
 
+
+class Libro{
+-Titulo: String
+-Isbn: String
+-Autor: String
+-Categoria: String
+-cantPag: Int
+-Stock: Int
++Libro(isbn:String, titulo:String, autor:String, categoria:String, stock:int, cantPag:int)
++getIsbn(): String
++getTitulo(): String
++getAutor(): String
++getCategoria(): String
++getcantPag(): int
++getStock(): int
++setStock(): int
+}
+
+class Usuario{
+-Nombre: String
+-Apellido: String
+-Rut: String
+-Contrasenia: String
+-librosEnPrestamo: libro[]
++Usuario(rut:String, nombre:String, apellido:String, contrasenia:String)
++agregarLibro(libro Libro): void
++devolverLibro(libro Libro): void
++getNombre(): String
++getApellido(): String
++getRut(): String
++getContrasenia(): String
++getLibrosEnPrestamo(): libro[]
+}
+
+Usuario "1..*"--->"1..*"Libro: Obtiene
+Sistema "1"--->"1..*" Libro: posee
+Usuario "1..*"--->"1" Sistema: usa
+Sistemuml ...> Sistema
 @enduml
