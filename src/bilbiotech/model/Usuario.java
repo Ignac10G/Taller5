@@ -1,4 +1,4 @@
-package cl.ucn.disc.pa.bibliotech.model;
+package bilbiotech.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +63,6 @@ public final class Usuario {
         }
         this.apellido = apellido;
 
-        // metodo estatico para validacion de email.
-        //if (!Utils.validarRut(rut)) {
-        //}
         this.rut = rut;
 
         // validacion contraseña
@@ -104,10 +101,6 @@ public final class Usuario {
     }
 
     /**
-     * @return el numero del usuario.
-     */
-
-    /**
      * @return la contrasenia del usuario.
      */
     public String getContrasenia() {
@@ -127,6 +120,19 @@ public final class Usuario {
         // agrego el libro
         this.librosEnPrestamo.add(libro);
     }
+    /**
+     * Eliminar un libro en prestamo al usuario.
+     *
+     * @param libro a Eliminar.
+     */
+    public void devolverLibro(final Libro libro) {
+        //Validacion
+        if (!librosEnPrestamo.contains(libro)) {
+            throw new IllegalArgumentException("El usuario no tiene este libro en prestamo");
+        }
+        // elimino el libro
+        this.librosEnPrestamo.remove(libro);
+    }
 
     /**
      * Cambiar contraseña.
@@ -137,5 +143,7 @@ public final class Usuario {
         this.contrasenia = contrasenia;
     }
 
-
+    public List<Libro> getLibrosEnPrestamo() {
+        return librosEnPrestamo;
+    }
 }

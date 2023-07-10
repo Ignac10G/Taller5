@@ -2,11 +2,11 @@
  * Copyright (c) 2023. Programacion Avanzada, DISC, UCN.
  */
 
-package cl.ucn.disc.pa.bibliotech.System;
+package bilbiotech.System;
 
-import cl.ucn.disc.pa.bibliotech.Forms.inicio;
-import cl.ucn.disc.pa.bibliotech.model.Libro;
-import cl.ucn.disc.pa.bibliotech.model.Usuario;
+import bilbiotech.Forms.inicio;
+import bilbiotech.model.Libro;
+import bilbiotech.model.Usuario;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,17 +24,17 @@ public final class Sistema {
     /**
      * Lista de usuarios.
      */
-    private static List<Usuario> usuarios;
+    private final List<Usuario> usuarios;
 
     /**
      * Lista de Libros.
      */
-    private static List<Libro> libros;
+    private final List<Libro> libros;
 
     /**
      * usuario en el sistema.
      */
-    private static Usuario usuario;
+    private Usuario usuario;
 
     /**
      * The Sistema.
@@ -42,15 +42,12 @@ public final class Sistema {
     public Sistema() throws IOException {
         usuarios = new ArrayList<>();
         libros = new ArrayList<>();
-
         // carga de los usuarios y libros.
         try {
             this.cargarInformacion();
-            iniciarSession();
-
-        } finally {
-            // guardo la informacion.
-            this.guardarInformacion();
+            inicio inici = new inicio(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -58,18 +55,21 @@ public final class Sistema {
     /**
      * Activa (inicia sesion) de un usuario en el sistema.
      */
-    public static void iniciarSession() {
-        inicio inici = new inicio();
-        usuario = inici.getUsuario();
+    public void iniciarSession(Usuario usuario) {
+        if (!usuarios.contains(usuario)){
+            throw new RuntimeException("No se encontro el usuario.");
+        }
+        this.usuario = usuario;
     }
 
     /**
      * Busca usuario por el rut de usuario
      */
-    public static Usuario buscarUsuarioRut(String rut) {
-        for (Usuario aux : usuarios) {
-            if (Objects.equals(aux.getRut(), rut)) {
-                return usuario;
+    public Usuario buscarUsuarioRut(String rut) {
+        for (Usuario aux : this.usuarios) {
+            if (aux.getRut().equals(rut)) {
+                System.out.println(aux);
+                return aux;
             }
         }
         return null;
@@ -85,35 +85,68 @@ public final class Sistema {
     /**
      * Metodo que mueve un libro de los disponibles y lo ingresa a un usuario.
      *
-     * @param isbn del libro a prestar.
+     * @param libro libro a prestar.
      */
-    public void realizarPrestamoLibro(final String isbn) throws IOException {
+    public void realizarPrestamoLibro(final Libro libro) throws IOException {
         // el usuario debe estar activo.
-        if (usuario == null) {
+        if (this.usuario == null) {
             throw new IllegalArgumentException("usuario no se ha logeado!");
         }
 
-        // busco el libro.
-        Libro libro = this.buscarLibro(isbn);
-
         // si no lo encontre, lo informo.
         if (libro == null) {
-            throw new IllegalArgumentException("Libro con isbn " + isbn + " no existe o no se encuentra disponible.");
+            throw new IllegalArgumentException("Libro con isbn " + libro.getIsbn() + " no existe o no se encuentra disponible.");
         }
 
         // agrego el libro al usuario.
-        usuario.agregarLibro(libro);
+        this.usuario.agregarLibro(libro);
 
-        // eliminar el libro de los disponibles.
-        for (Libro libro2 : libros) {
-            if (libro2 != null) {
-                libro2 = null;
+        // bajar el stock del libro disponible.
+        if (libro.getStock() <= 0){
+            this.libros.remove(libro);
+        } else {
+            for(Libro libro2: libros){
+                if (libro2 == libro){
+                    libro2.setStock(libro.getStock()-1);
+                }
             }
         }
 
-        // se actualiza la informacion de los archivos
-        this.guardarInformacion();
 
+        // se actualiza la informacion de los archivos
+        guardarInformacion();
+
+    }
+    /**
+     * Metodo que mueve un libro del usuario y lo ingresa al sistema.
+     *
+     * @param libro libro a devolver.
+     */
+    public void realizarDevolucionLibro(final Libro libro) throws IOException {
+        // el usuario debe estar activo.
+        if (this.usuario == null) {
+            throw new IllegalArgumentException("usuario no se ha logeado!");
+        }
+
+        // si no lo encontre, lo informo.
+        if (libro == null) {
+            throw new IllegalArgumentException("Libro con isbn " + libro.getIsbn() + " no existe o no se encuentra disponible.");
+        }
+
+        // elimino el libro del usuario.
+        usuario.devolverLibro(libro);
+
+        if (this.libros.contains(libro)){
+            for(Libro libro2: libros){
+                if (libro2 == libro){
+                    libro2.setStock(libro.getStock()+1);
+                }
+            }
+        } else {
+            this.libros.add(libro);
+        }
+        // se actualiza la informacion de los archivos
+        guardarInformacion();
     }
 
 
@@ -123,9 +156,9 @@ public final class Sistema {
      * @param isbn a buscar.
      * @return el libro o null si no fue encontrado.
      */
-    private Libro buscarLibro(final String isbn) {
+    public Libro buscarLibro(final String isbn) {
         // recorro el arreglo de libros.
-        for (Libro libro : libros) {
+        for (Libro libro : this.libros) {
             // si lo encontre, retorno el libro.
             if (libro.getIsbn().equals(isbn)) {
                 return libro;
@@ -134,7 +167,7 @@ public final class Sistema {
         // no lo encontre, retorno null.
         return null;
     }
-    public static void leerArchivoLibros() {
+    public void leerArchivoLibros() {
 
         // Leer el archivo "libros.txt"
         try (BufferedReader br = new BufferedReader(new FileReader("libros.txt", StandardCharsets.UTF_8))) {
@@ -145,12 +178,12 @@ public final class Sistema {
                 String title = chain[1];
                 String author = chain[2];
                 String category = chain[3];
-                int cantPag = Integer.parseInt(chain[4]);
-                int stock = Integer.parseInt(chain[5]);
+                int stock = Integer.parseInt(chain[4]);
+                int cantPag = Integer.parseInt(chain[5]);
 
 
-                Libro libro = new Libro(isbn, title, author, category,cantPag,stock);
-                libros.add(libro);
+                Libro libro = new Libro(isbn, title, author, category,stock,cantPag);
+                this.libros.add(libro);
             }
         } catch (Exception e) {
             System.out.println("Error al leer el archivo: " + e.getMessage());
@@ -160,7 +193,7 @@ public final class Sistema {
     /**
      * Método encargado de leer el archivo de "usuarios.txt".
      */
-    public static void leerArchivoUsuarios() {
+    public void leerArchivoUsuarios() {
         // Leer el archivo "usuarios.txt"
         try (BufferedReader br = new BufferedReader(new FileReader("usuarios.txt",StandardCharsets.UTF_8))) {
             String line;
@@ -178,6 +211,23 @@ public final class Sistema {
             System.out.println("Error al leer el archivo: " + e.getMessage());
         }
     }
+    public void leerArchivoReservas() {
+        // Leer el archivo "usuarios.txt"
+        try (BufferedReader br = new BufferedReader(new FileReader("reservas.txt",StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] chain = line.split(",");
+                String isbn = chain[3];
+                String tipoTransaccion = chain[5];
+                if (Objects.equals(tipoTransaccion, "prestamo")){
+                    Libro libro = buscarLibro(isbn);
+                    usuario.agregarLibro(libro);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al leer el archivo: " + e.getMessage());
+        }
+    }
 
     /**
      * Lee los archivos libros.txt y usuarios.txt.
@@ -186,6 +236,7 @@ public final class Sistema {
         // trato de leer los usuarios y los libros desde el archivo.
         leerArchivoLibros();
         leerArchivoUsuarios();
+        leerArchivoReservas();
     }
 
     /**
@@ -193,35 +244,29 @@ public final class Sistema {
      *
      * @throws IOException en caso de algun error.
      */
-    private void guardarInformacion() throws IOException {
+    public void guardarInformacion() throws IOException {
 
         // guardo los usuarios.
-        try (FileWriter writer = new FileWriter("usuarios.txt",StandardCharsets.UTF_8,true)) {
+        try (FileWriter writer = new FileWriter("usuarios.txt")) {
             //for para recorrer la lista
-            for (Usuario usuario : usuarios){
+            PrintWriter line = new PrintWriter(writer);
+            for (Usuario usuario : this.usuarios){
                 //Obtenemos los datos
                 String linea = usuario.getRut() +","+ usuario.getNombre()+","+ usuario.getApellido()+","+ usuario.getContrasenia();
-                PrintWriter line = new PrintWriter(writer);
-
                 //Escribimos en el archivo
                 line.println(linea);
-                line.close();
-                writer.close();
             }
         }
 
         // guardo los libros.
-        try (FileWriter writer = new FileWriter("libros.txt",StandardCharsets.UTF_8,true)) {
+        try (FileWriter writer = new FileWriter("libros.txt")) {
+            PrintWriter line = new PrintWriter(writer);
             //for para recorrer la lista
-            for (Libro libro : libros){
+            for (Libro libro : this.libros){
                 //Obtenemos los datos
-                String linea = libro.getIsbn() +","+ libro.getTitulo()+","+libro.getAutor()+","+libro.getCategoria()+","+libro.getCantPag()+","+libro.getStock();
-                PrintWriter line = new PrintWriter(writer);
-
+                String linea = libro.getIsbn() +","+ libro.getTitulo()+","+libro.getAutor()+","+libro.getCategoria()+","+libro.getStock()+","+libro.getCantPag();
                 //Escribimos en el archivo
                 line.println(linea);
-                line.close();
-                writer.close();
             }
         }
     }
@@ -230,7 +275,14 @@ public final class Sistema {
         return usuario;
     }
 
-    public static List<Usuario> getUsuarios() {
-        return usuarios;
+    public List<Usuario> getUsuarios() {
+        return this.usuarios;
+    }
+
+    public List<Libro> getLibros() {
+        return this.libros;
+    }
+    public void agregarLibro(Libro libro){
+        this.libros.add(libro);
     }
 }

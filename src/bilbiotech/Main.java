@@ -1,6 +1,6 @@
-package cl.ucn.disc.pa.bibliotech;
+package bilbiotech;
 
-import cl.ucn.disc.pa.bibliotech.System.Sistema;
+import bilbiotech.System.Sistema;
 
 import java.io.IOException;
 

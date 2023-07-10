@@ -1,4 +1,4 @@
-package cl.ucn.disc.pa.bibliotech.model;
+package bilbiotech.model;
 
 /**
  * Clase que representa un Libro.
@@ -43,7 +43,7 @@ public final class Libro {
      * @param autor     del libro
      * @param categoria del libro.
      */
-    public Libro(final String isbn, final String titulo, final String autor, final String categoria,int cantPag, int stock) {
+    public Libro(final String isbn, final String titulo, final String autor, final String categoria,int stock, int cantPag) {
         // validacion de ISBN
         if (isbn == null || isbn.length() == 0) {
             throw new IllegalArgumentException("ISBN no valido!");
@@ -119,5 +119,9 @@ public final class Libro {
      */
     public int getCantPag() {
         return cantPag;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 }

@@ -1,20 +1,20 @@
-package cl.ucn.disc.pa.bibliotech.Forms;
+package bilbiotech.Forms;
 
-import cl.ucn.disc.pa.bibliotech.System.Sistema;
-import cl.ucn.disc.pa.bibliotech.model.Usuario;
+import bilbiotech.System.Sistema;
+import bilbiotech.model.Usuario;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class inicio extends JFrame{
-    private JTextField contrasenia;
     private JTextField rut;
+    private JTextField contrasenia;
     private JButton button;
     private JPanel FormDinicio;
     private JButton cerrarButton;
-    private Usuario usuario;
-    public inicio(){
+    public inicio(Sistema sistema){
         setContentPane(FormDinicio);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Inicio de sesion.");
@@ -25,7 +25,7 @@ public class inicio extends JFrame{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                verificarUsuario();
+                verificarUsuario(sistema);
             }
         });
 
@@ -36,17 +36,19 @@ public class inicio extends JFrame{
             }
         });
     }
-    private void verificarUsuario() {
-
+    private void verificarUsuario(Sistema sistema) {
         try {
-            String rut = this.rut.getText();
-            String contrasenia = this.contrasenia.getText();
-
-            if (!rut.isEmpty() && !contrasenia.isEmpty()) {
-                usuario = Sistema.buscarUsuarioRut(rut);
-                System.out.println("inicio exitoso");
-                limpiar();
-                menuPrincipal menu = new menuPrincipal();
+            String rut2 = contrasenia.getText();
+            String contrasenia = this.rut.getText();
+            Usuario usuario = sistema.buscarUsuarioRut(rut2);
+            if (usuario == null){
+                JOptionPane.showMessageDialog(FormDinicio, "Usuario no registrado.");
+            }
+            if (!rut2.isEmpty() && !contrasenia.isEmpty()) {
+                sistema.iniciarSession(usuario);
+                menuPrincipal menu = new menuPrincipal(sistema);
+                menu.setVisible(true);
+                this.setVisible(false);
 
             } else {
                 JOptionPane.showMessageDialog(FormDinicio, "Por favor, complete todos los campos.");
@@ -65,7 +67,12 @@ public class inicio extends JFrame{
         System.exit(0);
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public String getRut() {
+        return this.rut.getText();
+    }
+    public String rutTo(String rut){
+        rut = rut.replace(".", "").replace("-", "");
+        String rutNumerico = rut.substring(0, rut.length());
+        return rutNumerico;
     }
 }
