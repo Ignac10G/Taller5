@@ -3,7 +3,8 @@ package bilbiotech.model;
 /**
  * Clase que representa un Libro.
  *
- * @author .
+ * @author Ignacio Gavia
+ *         Vicente Castro.
  */
 public final class Libro {
 
@@ -121,6 +122,10 @@ public final class Libro {
         return cantPag;
     }
 
+    /**
+     * Actualiza el stock de los libros
+     * @param stock Stock.
+     */
     public void setStock(int stock) {
         this.stock = stock;
     }

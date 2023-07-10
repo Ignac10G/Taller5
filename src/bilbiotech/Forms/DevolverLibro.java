@@ -10,11 +10,22 @@ import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+/**
+ * Clase que representa el menu devolucion de libros en JFrame.
+ *
+ * @author Ignacio Gavia
+ *         Vicente Castro.
+ */
 
 public class DevolverLibro extends JFrame{
     private JTextField isbnInput;
     private JButton devolverButton;
     private JPanel devolverLibro;
+
+    /**
+     * The constructor.
+     * @param sistema sistema en el que opera.
+     */
     public DevolverLibro(Sistema sistema){
         setContentPane(devolverLibro);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -32,6 +43,11 @@ public class DevolverLibro extends JFrame{
             }
         });
     }
+
+    /**
+     * Metodo encargado de la devolucion del libro.
+     * @param sistema sistema en el que opera.
+     */
     public void devolverLibroPrestado(Sistema sistema){
         try {
             Usuario aux = sistema.getusuario();
@@ -63,6 +79,10 @@ public class DevolverLibro extends JFrame{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Metodo que limpia los cuadros de texto.
+     */
     private void limpiar(){
         isbnInput.setText("");
     }

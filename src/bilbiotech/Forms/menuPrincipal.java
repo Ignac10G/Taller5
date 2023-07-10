@@ -8,7 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
-
+/**
+ * Clase que representa el menu de principal del sistema en JFrame.
+ *
+ * @author Ignacio Gavia
+ *         Vicente Castro.
+ */
 public class menuPrincipal extends JFrame{
     private JButton buscarLibroButton;
     private JButton prestarLibro;
@@ -17,6 +22,10 @@ public class menuPrincipal extends JFrame{
     private JPanel menuPrincipal;
     private JButton cerrarSesiónButton;
 
+    /**
+     * The constructor.
+     * @param sistema sistema en que opera.
+     */
     public menuPrincipal(Sistema sistema){
         setContentPane(menuPrincipal);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -27,6 +36,7 @@ public class menuPrincipal extends JFrame{
         buscarLibroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //cambio de ventana
                 BuscarLibro bl = new BuscarLibro(sistema);
                 bl.setVisible(true);
                 setVisible(false);
@@ -36,6 +46,7 @@ public class menuPrincipal extends JFrame{
         prestarLibro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //cambio de ventana
                 PrestarLibro pl = new PrestarLibro(sistema);
                 pl.setVisible(true);
                 setVisible(false);
@@ -45,6 +56,7 @@ public class menuPrincipal extends JFrame{
         agregarLibro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //cambio de ventana
                 AgregarLibro Al = new AgregarLibro(sistema);
                 Al.setVisible(true);
                 setVisible(false);
@@ -54,6 +66,7 @@ public class menuPrincipal extends JFrame{
         devolverLibro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //cambio de ventana
                 DevolverLibro dL = new DevolverLibro(sistema);
                 dL.setVisible(true);
                 setVisible(false);
@@ -68,6 +81,7 @@ public class menuPrincipal extends JFrame{
         cerrarSesiónButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Cierre de sesion.
                 try {
                     sistema.guardarInformacion();
                     sistema.cerrarSession();

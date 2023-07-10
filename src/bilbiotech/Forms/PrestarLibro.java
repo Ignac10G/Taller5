@@ -11,6 +11,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Clase que representa el menu de prestamo de libros en JFrame.
+ *
+ * @author Ignacio Gavia
+ *         Vicente Castro.
+ */
 public class PrestarLibro extends JFrame {
     private JTextField isbnInput;
     private JButton buscarButton;
@@ -19,6 +25,10 @@ public class PrestarLibro extends JFrame {
     private JTextArea mostrarLibro;
     private Libro libro;
 
+    /**
+     * The constructor
+     * @param sistema sistema en el que opera.
+     */
     public PrestarLibro(Sistema sistema){
         setContentPane(PrestarLibro);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -64,9 +74,18 @@ public class PrestarLibro extends JFrame {
             }
         });
     }
+
+    /**
+     * Metodo que limpia los cuadros de texto.
+     */
     private void limpiar(){
         isbnInput.setText("");
     }
+
+    /**
+     * Metodo que contiene algoritmo de prestamo
+     * @param sistema sistema en el que opera.
+     */
     public void prestar(Sistema sistema){
         try {
             sistema.realizarPrestamoLibro(libro);
@@ -82,6 +101,7 @@ public class PrestarLibro extends JFrame {
                 //Escribimos en el archivo
                 line.println(linea);
             }
+            //Cambiamos de ventana
             menuPrincipal menu = new menuPrincipal(sistema);
             menu.setVisible(true);
             setVisible(false);

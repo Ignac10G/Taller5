@@ -7,6 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+/**
+ * Clase que representa el menu busqueda de libros en JFrame.
+ *
+ * @author Ignacio Gavia
+ *         Vicente Castro.
+ */
 
 public class BuscarLibro extends JFrame{
     private JButton botonVolver;
@@ -15,6 +21,10 @@ public class BuscarLibro extends JFrame{
     private JPanel BuscarLibro;
     private JButton botonBuscar;
 
+    /**
+     * The constructor.
+     * @param sistema
+     */
     public BuscarLibro (Sistema sistema) {
         setContentPane(BuscarLibro);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -37,6 +47,11 @@ public class BuscarLibro extends JFrame{
             }
         });
     }
+
+    /**
+     * Metodo encargado de verificar los libros.
+     * @param sistema sistema en el que opera.
+     */
     public void verificarLibro(Sistema sistema){
         try {
             String isbn = isbnInput.getText();
@@ -63,6 +78,9 @@ public class BuscarLibro extends JFrame{
             limpiar();
         }
     }
+    /**
+     * Metodo que limpia los cuadros de texto.
+     */
     private void limpiar(){
         isbnInput.setText("");
     }

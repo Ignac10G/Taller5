@@ -17,7 +17,8 @@ import java.util.Objects;
 /**
  * The Sistema.
  *
- * @author .
+ * @author Ignacio Gavia
+ *         Vicente Castro.
  */
 public final class Sistema {
 
@@ -56,6 +57,7 @@ public final class Sistema {
      * Activa (inicia sesion) de un usuario en el sistema.
      */
     public void iniciarSession(Usuario usuario) {
+        //validar usuario registrado
         if (!usuarios.contains(usuario)){
             throw new RuntimeException("No se encontro el usuario.");
         }
@@ -66,6 +68,7 @@ public final class Sistema {
      * Busca usuario por el rut de usuario
      */
     public Usuario buscarUsuarioRut(String rut) {
+        //for
         for (Usuario aux : this.usuarios) {
             if (aux.getRut().equals(rut)) {
                 System.out.println(aux);
@@ -211,15 +214,19 @@ public final class Sistema {
             System.out.println("Error al leer el archivo: " + e.getMessage());
         }
     }
+    /**
+     * Método encargado de leer el archivo de "reservas.txt".
+     */
     public void leerArchivoReservas() {
-        // Leer el archivo "usuarios.txt"
+        // Leer el archivo "reservas.txt"
         try (BufferedReader br = new BufferedReader(new FileReader("reservas.txt",StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] chain = line.split(",");
+                String rut = chain[0];
                 String isbn = chain[3];
                 String tipoTransaccion = chain[5];
-                if (Objects.equals(tipoTransaccion, "prestamo")){
+                if (Objects.equals(tipoTransaccion, "prestamo") && Objects.equals(usuario.getRut(), rut)){
                     Libro libro = buscarLibro(isbn);
                     usuario.agregarLibro(libro);
                 }
@@ -270,18 +277,28 @@ public final class Sistema {
             }
         }
     }
-
+    /**
+     * @return Usuario en session.
+     */
     public Usuario getusuario() {
         return usuario;
     }
 
+    /**
+     * @return Lista usuarios.
+     */
     public List<Usuario> getUsuarios() {
         return this.usuarios;
     }
-
+    /**
+     * @return Lista libros.
+     */
     public List<Libro> getLibros() {
         return this.libros;
     }
+    /**
+     * Agrega un libro a la biblioteca.
+     */
     public void agregarLibro(Libro libro){
         this.libros.add(libro);
     }

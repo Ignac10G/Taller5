@@ -7,6 +7,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+/**
+ * Clase que representa el menu de inicio de sesion del sistema en JFrame.
+ *
+ * @author Ignacio Gavia
+ *         Vicente Castro.
+ */
 
 public class inicio extends JFrame{
     private JTextField rut;
@@ -14,6 +20,11 @@ public class inicio extends JFrame{
     private JButton button;
     private JPanel FormDinicio;
     private JButton cerrarButton;
+
+    /**
+     * The constructor.
+     * @param sistema sistema en el que opera.
+     */
     public inicio(Sistema sistema){
         setContentPane(FormDinicio);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -36,6 +47,11 @@ public class inicio extends JFrame{
             }
         });
     }
+
+    /**
+     * Metodo que verifica los datos ingresados.
+     * @param sistema sistema en el que opera.
+     */
     private void verificarUsuario(Sistema sistema) {
         try {
             String rut2 = contrasenia.getText();
@@ -59,20 +75,19 @@ public class inicio extends JFrame{
         }
 
     }
+    /**
+     * Metodo que limpia los cuadros de texto.
+     */
     private void limpiar(){
         rut.setText("");
         contrasenia.setText("");
     }
+
+    /**
+     * Metodo para finalizar el programa.
+     */
     private void close(){
         System.exit(0);
     }
 
-    public String getRut() {
-        return this.rut.getText();
-    }
-    public String rutTo(String rut){
-        rut = rut.replace(".", "").replace("-", "");
-        String rutNumerico = rut.substring(0, rut.length());
-        return rutNumerico;
-    }
 }

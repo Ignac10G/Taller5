@@ -37,7 +37,7 @@ public final class Usuario {
     private String contrasenia;
 
     /**
-     * Libros que el usuario tiene en prestamo (maximo 10).
+     * Libros que el usuario tiene en prestamo.
      */
     private List<Libro> librosEnPrestamo = new ArrayList<>();
 
@@ -135,14 +135,8 @@ public final class Usuario {
     }
 
     /**
-     * Cambiar contraseña.
-     *
-     * @param contrasenia a agregar
+     * @return Lista de libros en prestamo.
      */
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
-
     public List<Libro> getLibrosEnPrestamo() {
         return librosEnPrestamo;
     }

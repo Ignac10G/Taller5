@@ -6,6 +6,12 @@ import bilbiotech.model.Libro;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+/**
+ * Clase que representa el menu de agregar libros a la biblioteca en JFrame.
+ *
+ * @author Ignacio Gavia
+ *         Vicente Castro.
+ */
 
 public class AgregarLibro extends JFrame{
     private JTextField isbn;
@@ -18,6 +24,10 @@ public class AgregarLibro extends JFrame{
     private JPanel AgregarLibro;
     private JButton botonVolver;
 
+    /**
+     * The constructor.
+     * @param sistema sistema en el que opera.
+     */
     public AgregarLibro(Sistema sistema){
         setContentPane(AgregarLibro);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -42,6 +52,11 @@ public class AgregarLibro extends JFrame{
             }
         });
     }
+
+    /**
+     * Metodo encargado de agregar los libros a la lista de libros del sistema.
+     * @param sistema sistema en el que opera.
+     */
     public void agregarLibro(Sistema sistema){
         try {
             String codigoIsbn = isbn.getText();
@@ -66,6 +81,9 @@ public class AgregarLibro extends JFrame{
             limpiar();
         }
     }
+    /**
+     * Metodo que limpia los cuadros de texto.
+     */
     private void limpiar(){
         isbn.setText("");
         titulo.setText("");
